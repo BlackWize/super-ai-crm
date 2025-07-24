@@ -14,7 +14,216 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      apis_conectadas: {
+        Row: {
+          ativo: boolean
+          chave_token: string
+          created_at: string
+          descricao: string | null
+          id: string
+          nome_api: string
+          tipo_autenticacao: Database["public"]["Enums"]["tipo_autenticacao"]
+          updated_at: string
+          url_base: string
+        }
+        Insert: {
+          ativo?: boolean
+          chave_token: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome_api: string
+          tipo_autenticacao: Database["public"]["Enums"]["tipo_autenticacao"]
+          updated_at?: string
+          url_base: string
+        }
+        Update: {
+          ativo?: boolean
+          chave_token?: string
+          created_at?: string
+          descricao?: string | null
+          id?: string
+          nome_api?: string
+          tipo_autenticacao?: Database["public"]["Enums"]["tipo_autenticacao"]
+          updated_at?: string
+          url_base?: string
+        }
+        Relationships: []
+      }
+      clientes: {
+        Row: {
+          cpf: string | null
+          created_at: string
+          data_cadastro: string
+          email: string | null
+          id: string
+          nome: string
+          origem: string | null
+          status: Database["public"]["Enums"]["cliente_status"]
+          tags: string[] | null
+          telefone: string | null
+          updated_at: string
+        }
+        Insert: {
+          cpf?: string | null
+          created_at?: string
+          data_cadastro?: string
+          email?: string | null
+          id?: string
+          nome: string
+          origem?: string | null
+          status?: Database["public"]["Enums"]["cliente_status"]
+          tags?: string[] | null
+          telefone?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cpf?: string | null
+          created_at?: string
+          data_cadastro?: string
+          email?: string | null
+          id?: string
+          nome?: string
+          origem?: string | null
+          status?: Database["public"]["Enums"]["cliente_status"]
+          tags?: string[] | null
+          telefone?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      interacoes: {
+        Row: {
+          canal: Database["public"]["Enums"]["interacao_canal"]
+          cliente_id: string
+          created_at: string
+          data: string
+          id: string
+          mensagem: string
+          resposta: string | null
+          usuario_id: string | null
+        }
+        Insert: {
+          canal: Database["public"]["Enums"]["interacao_canal"]
+          cliente_id: string
+          created_at?: string
+          data?: string
+          id?: string
+          mensagem: string
+          resposta?: string | null
+          usuario_id?: string | null
+        }
+        Update: {
+          canal?: Database["public"]["Enums"]["interacao_canal"]
+          cliente_id?: string
+          created_at?: string
+          data?: string
+          id?: string
+          mensagem?: string
+          resposta?: string | null
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "interacoes_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "interacoes_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tarefas: {
+        Row: {
+          cliente_id: string
+          created_at: string
+          data_limite: string | null
+          descricao: string
+          id: string
+          responsavel: string
+          status: Database["public"]["Enums"]["tarefa_status"]
+          updated_at: string
+          usuario_id: string | null
+        }
+        Insert: {
+          cliente_id: string
+          created_at?: string
+          data_limite?: string | null
+          descricao: string
+          id?: string
+          responsavel: string
+          status?: Database["public"]["Enums"]["tarefa_status"]
+          updated_at?: string
+          usuario_id?: string | null
+        }
+        Update: {
+          cliente_id?: string
+          created_at?: string
+          data_limite?: string | null
+          descricao?: string
+          id?: string
+          responsavel?: string
+          status?: Database["public"]["Enums"]["tarefa_status"]
+          updated_at?: string
+          usuario_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tarefas_cliente_id_fkey"
+            columns: ["cliente_id"]
+            isOneToOne: false
+            referencedRelation: "clientes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tarefas_usuario_id_fkey"
+            columns: ["usuario_id"]
+            isOneToOne: false
+            referencedRelation: "usuarios"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      usuarios: {
+        Row: {
+          cargo: Database["public"]["Enums"]["cargo_usuario"]
+          created_at: string
+          email: string
+          id: string
+          login: string
+          nome: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          cargo?: Database["public"]["Enums"]["cargo_usuario"]
+          created_at?: string
+          email: string
+          id?: string
+          login: string
+          nome: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          cargo?: Database["public"]["Enums"]["cargo_usuario"]
+          created_at?: string
+          email?: string
+          id?: string
+          login?: string
+          nome?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +232,11 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      cargo_usuario: "admin" | "vendedor" | "supervisor" | "atendente"
+      cliente_status: "novo" | "em_andamento" | "fechado" | "perdido"
+      interacao_canal: "whatsapp" | "email" | "telefone" | "chat" | "presencial"
+      tarefa_status: "pendente" | "em_andamento" | "concluida" | "cancelada"
+      tipo_autenticacao: "api_key" | "bearer_token" | "basic_auth" | "oauth"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +363,12 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      cargo_usuario: ["admin", "vendedor", "supervisor", "atendente"],
+      cliente_status: ["novo", "em_andamento", "fechado", "perdido"],
+      interacao_canal: ["whatsapp", "email", "telefone", "chat", "presencial"],
+      tarefa_status: ["pendente", "em_andamento", "concluida", "cancelada"],
+      tipo_autenticacao: ["api_key", "bearer_token", "basic_auth", "oauth"],
+    },
   },
 } as const
